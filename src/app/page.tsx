@@ -20,7 +20,12 @@ const getProducts = async (
   if (category) {
     url.searchParams.set('categoryId', category);
   }
-  const response = await fetch(url.toString());
+  const response = await fetch(url.toString(), {
+    next: {
+      revalidate: 3600,
+    },
+  });
+
   const data = await response.json();
   return data as Product[];
 };

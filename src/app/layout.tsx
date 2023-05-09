@@ -13,7 +13,11 @@ export const metadata = {
 
 // Gets all aviable categories
 const getCategories = async () => {
-  const response = await fetch('https://api.escuelajs.co/api/v1/categories');
+  const response = await fetch('https://api.escuelajs.co/api/v1/categories', {
+    next: {
+      revalidate: 3600,
+    },
+  });
   const data = await response.json();
   return data as Category[];
 };
