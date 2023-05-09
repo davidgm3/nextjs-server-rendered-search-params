@@ -1,12 +1,11 @@
 'use client';
 import useDebounce from '@/hooks/useDebounce';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 
 export default function SearchBox() {
-  const [search, setSearch] = useState(
-    new URLSearchParams(window.location.search).get('search') || ''
-  );
+  const searchParams = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get('search') ?? '');
   const { replace } = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
