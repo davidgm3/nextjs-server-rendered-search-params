@@ -17,3 +17,7 @@ This example works by pushing state to the URL, and then NextJS will stream the 
 - Automatic caching by NextJS.
 
 **But what if we need to know if new data is currently loading?** Simple, we can combine useTransition and useEffect as shown in the code.
+
+## Notes
+
+- In things like a search input, you should use a debounce to avoid making too many requests, as shown in the code.

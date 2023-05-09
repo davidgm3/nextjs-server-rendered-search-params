@@ -1,20 +1,22 @@
 'use client';
+import useDebounce from '@/hooks/useDebounce';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 
 export default function SearchBox() {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(
+    new URLSearchParams(window.location.search).get('search') || ''
+  );
   const { replace } = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
-  // Load the search value from the URL. Useful for shareable state
-  useEffect(() => {
-    let currentParams = new URLSearchParams(window.location.search);
-    setSearch(currentParams.get('search') || '');
-  }, []);
+  // Debounce the search value to avoid triggering a server-side rerender on every keystroke
+  const debouncedSearch = useDebounce(search, 300);
 
-  // Whenever the search value changes, update the URL, which will trigger a server-side rerender from NextJS
+  // Load the search value from the URL. Useful for shareable state
+
+  // Whenever the debounced search value changes, update the URL, which will trigger a server-side rerender from NextJS
   useEffect(() => {
     let currentParams = new URLSearchParams(window.location.search);
     if (search) {
@@ -25,7 +27,7 @@ export default function SearchBox() {
     startTransition(() => {
       replace(`${pathname}?${currentParams.toString()}`);
     });
-  }, [search]);
+  }, [debouncedSearch]);
 
   return (
     <div className='relative'>
